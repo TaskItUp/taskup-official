@@ -13,6 +13,50 @@
 </head>
 <body>
 
+
+<body>
+  <h1>Firebase Web App</h1>
+  <button id="addTaskBtn">Add Task</button>
+
+  <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // TODO: Replace with your own Firebase config from the console
+    const firebaseConfig = {
+    apiKey: "AIzaSyDS-X4ZRHlLIBOZJsYKc9oGnNrL6k0J50U",
+  authDomain: "taskup-47d9c.firebaseapp.com",
+  projectId: "taskup-47d9c",
+  storageBucket: "taskup-47d9c.firebasestorage.app",
+  messagingSenderId: "889706397464",
+  appId: "1:889706397464:web:12e95e738f3f42ba08a86d",
+  measurementId: "G-FDKNRDJXQS"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Function to add data to Firestore
+    async function addTask() {
+      try {
+        await addDoc(collection(db, "tasks"), {
+          name: "Test Task",
+          status: "pending",
+          createdAt: new Date()
+        });
+        alert("Task added!");
+      } catch (error) {
+        console.error("Error adding task: ", error);
+      }
+    }
+
+    // Event listener for the button
+    document.getElementById("addTaskBtn").addEventListener("click", addTask);
+  </script>
     <div id="app-container">
         <div id="home" class="tab-content active">
             <div class="header">
@@ -166,4 +210,5 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js" defer></script>
     <script src="script.js" defer></script>
 </body>
+
 </html>
