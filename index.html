@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TaskUp — Fixed</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- kept layout similar to your app -->
+    <div id="home" class="tab-content active">
+      <div class="header">
+        <div class="user-info">
+          <p class="welcome-text">Welcome,</p>
+          <h2 class="username" id="home-username">User</h2>
+        </div>
+        <img src="https://i.pravatar.cc/100" alt="User Profile" class="profile-pic">
+      </div>
+
+      <div class="main-balance-card">
+        <p>Total Balance</p>
+        <h1 class="balance-amount"><span id="balance-home">0</span> <span class="currency">PEPE</span></h1>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <i class="fas fa-eye icon"></i>
+          <p>Ads Watched (Today)</p>
+          <h3 id="ads-watched-today">0</h3>
+        </div>
+        <div class="stat-box">
+          <i class="fas fa-hourglass-half icon"></i>
+          <p>Ads Left Today</p>
+          <h3 id="ads-left-today">40</h3>
+        </div>
+      </div>
+
+      <h3>Bonus Points</h3>
+      <div class="task-card" id="task-channel_1" data-task-id="channel_1" data-url="https://t.me/taskupofficial" data-reward="300">
+        <div class="task-info">
+          <p class="task-title">Join Official Channel</p>
+          <p class="task-reward">+300 PEPE</p>
+        </div>
+        <div class="task-buttons">
+          <button class="join-btn" onclick="handleJoinClick('channel_1','https://t.me/taskupofficial')"><i class="fab fa-telegram-plane"></i> Join</button>
+          <button class="verify-btn" id="verify_channel_1" onclick="handleVerifyClick('channel_1',300)" disabled>Verify</button>
+        </div>
+      </div>
+
+      <div style="margin:20px;text-align:center;">
+        <button onclick="testEarn()">📈 Test +10 PEPE</button>
+      </div>
+    </div>
+
+    <!-- Profile simplified -->
+    <div id="profile" class="tab-content">
+      <div class="profile-header">
+        <img src="https://i.pravatar.cc/150" alt="User Profile" class="profile-pic-large">
+        <h3 id="profile-name">User</h3>
+        <p id="telegram-username" class="text-muted">@username</p>
+        <p class="profile-balance">Balance: <span id="profile-balance">0</span> PEPE</p>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <p>Earned So Far</p>
+          <p class="stat-value"><span id="earned-so-far">0</span> PEPE</p>
+        </div>
+        <div class="stat-item">
+          <p>Total Ads Viewed</p>
+          <p class="stat-value" id="total-ads-viewed">0</p>
+        </div>
+        <div class="stat-item">
+          <p>Total Referrals</p>
+          <p class="stat-value" id="total-refers">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="refer-fab" onclick="openReferModal()" title="Refer friends"><i class="fas fa-gift"></i></button>
+
+  <div id="refer-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeReferModal()">&times;</button>
+      <h2>Refer Friends — Earn 10%</h2>
+      <div class="referral-link-container">
+        <input id="referral-link" readonly>
+        <button onclick="copyReferralLink(this)"><i class="fas fa-copy"></i></button>
+      </div>
+      <p><strong><span id="refer-count">0</span></strong> referrals — <strong><span id="refer-earnings">0</span> PEPE</strong></p>
+    </div>
+  </div>
+
+  <nav class="nav-bar" aria-label="Main">
+    <a href="#" class="nav-item active" onclick="showTab('home', this)"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="nav-item" onclick="showTab('earn', this)"><i class="fas fa-coins"></i><span>Earn</span></a>
+    <a href="#" class="nav-item" onclick="showTab('withdraw', this)"><i class="fas fa-wallet"></i><span>Withdraw</span></a>
+    <a href="#" class="nav-item" onclick="showTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></a>
+  </nav>
+
+  <!-- must load Telegram first -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <!-- app script (compat) -->
+  <script src="script.js"></script>
+</body>
+</html>
