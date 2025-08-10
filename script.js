@@ -19,7 +19,7 @@ const db = firebase.firestore();
 let userState = {};
 let telegramUserId = null;
 let isInitialized = false;
-const TELEGRAM_BOT_USERNAME = "TaskItUpBot";
+const TELEGRAM_BOT_USERNAME = "Taskup_official_bot";
 
 const DAILY_TASK_LIMIT = 40;
 const AD_REWARD = 250;
@@ -195,4 +195,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Telegram script not found. Running in browser test mode.");
         initializeApp(null);
     }
+
 });
