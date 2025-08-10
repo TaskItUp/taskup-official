@@ -1,258 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Crypto Task App</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <script src='//libtl.com/sdk.js' data-zone='9685198' data-sdk='show_9685198'></script>
+    <title>TaskUp</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-
-<body>
-
-  <button id="addTaskBtn">Add Task</button>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-    // Firebase config
-    const firebaseConfig = {
-        apiKey: "AIzaSyDS-X4ZRHlLIBOZJsYKc9oGnNrL6k0J50U",
-        authDomain: "taskup-47d9c.firebaseapp.com",
-        projectId: "taskup-47d9c",
-        storageBucket: "taskup-47d9c.firebasestorage.app",
-        messagingSenderId: "889706397464",
-        appId: "1:889706397464:web:12e95e738f3f42ba08a86d",
-        measurementId: "G-FDKNRDJXQS"
-    };
-
-    // Init Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-
-    // Copy referral link function
-    window.copyReferralLink = (button) => {
-        const input = document.getElementById("referral-link");
-        input.select();
-        navigator.clipboard.writeText(input.value).then(() => {
-            button.innerHTML = '<i class="fas fa-check"></i>';
-            setTimeout(() => button.innerHTML = '<i class="fas fa-copy"></i>', 2000);
-        });
-    };
-
-    // Listen for profile changes
-    function listenUserProfile(userId) {
-        const userRef = doc(db, "users", userId.toString());
-        onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById("profile-name").textContent = data.name || "User";
-                document.getElementById("telegram-username").textContent = data.username ? @${data.username} : "@username";
-                document.getElementById("profile-balance").textContent = data.balance || 0;
-                document.getElementById("earned-so-far").textContent = data.earned || 0;
-                document.getElementById("total-ads-viewed").textContent = data.adsViewed || 0;
-                document.getElementById("total-refers").textContent = data.referrals || 0;
-                document.getElementById("refer-count").textContent = data.referrals || 0;
-                document.getElementById("refer-earnings").textContent = data.referralEarnings || 0;
-                document.getElementById("referral-link").value = https://t.me/YOUR_BOT?start=${userId};
-            }
-        });
-    }
-
-    // Create user in Firestore if not exists
-    async function ensureUserExists(user) {
-        const userRef = doc(db, "users", user.id.toString());
-        const docSnap = await getDoc(userRef);
-        if (!docSnap.exists()) {
-            await setDoc(userRef, {
-                name: user.first_name || "User",
-                username: user.username || "",
-                balance: 0,
-                earned: 0,
-                adsViewed: 0,
-                referrals: 0,
-                referralEarnings: 0,
-                createdAt: new Date().toISOString()
-            });
-            console.log("New user created in Firestore");
-        } else {
-            console.log("User already exists");
-        }
-    }
-
-    // Telegram WebApp ready
-    Telegram.WebApp.ready();
-    const tgUser = Telegram.WebApp.initDataUnsafe.user;
-
-    if (tgUser) {
-        await ensureUserExists(tgUser);
-        listenUserProfile(tgUser.id);
-    } else {
-        console.log("No Telegram user found");
-    }
-</script>
-    <div id="app-container">
-        <div id="home" class="tab-content active">
-            <div class="header">
-                <div class="user-info">
-                    <p class="welcome-text">Welcome,</p>
-                    <h2 class="username" id="home-username">User</h2>
-                </div>
-                <img src="https://i.pravatar.cc/100" alt="User Profile" class="profile-pic">
-            </div>
-            <div class="main-balance-card">
-                <p>Total Balance</p>
-                <h1 class="balance-amount"><span id="balance-home">0</span> <span class="currency">PEPE</span></h1>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <i class="fas fa-eye icon"></i>
-                    <p>Ads Watched (Today)</p>
-                    <h3 id="ads-watched-today">0</h3>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-hourglass-half icon"></i>
-                    <p>Ads Left Today</p>
-                    <h3 id="ads-left-today">40</h3>
-                </div>
-            </div>
-            <div class="bonus-section">
-                <h3 class="section-title">Bonus Points</h3>
-                <div class="task-card" id="task-channel_1" data-task-id="channel_1" data-url="https://t.me/taskupofficial" data-reward="300">
-                    <div class="task-info">
-                        <p class="task-title">Join Official Channel</p>
-                        <p class="task-reward">+300 PEPE</p>
-                    </div>
-                    <div class="task-buttons">
-                        <button class="join-btn"><i class="fab fa-telegram-plane"></i> Join</button>
-                        <button class="verify-btn" disabled>Verify</button>
-                    </div>
-                    <div class="task-done"><i class="fas fa-check"></i> Done</div>
-                </div>
-            </div>
+<div id="profile" class="tab-content">
+    <div class="profile-header">
+        <img src="https://i.pravatar.cc/150" alt="User Profile" class="profile-pic-large">
+        <h3 id="profile-name">User</h3>
+        <p id="telegram-username" class="text-muted">@username</p>
+        <p class="profile-balance">Balance: <span id="profile-balance">0</span> PEPE</p>
+    </div>
+    <div class="profile-stats">
+        <h3 class="section-title">Statistics</h3>
+        <div class="stat-item">
+            <p><i class="fas fa-chart-line icon-left"></i> Earned So Far</p>
+            <p class="stat-value"><span id="earned-so-far">0</span> PEPE</p>
         </div>
-
-        <div id="earn" class="tab-content">
-            <h2 class="page-title">Earn Rewards</h2>
-            <div class="earn-task-card">
-                <h3 class="card-title">Today's Ad Tasks</h3>
-                <div class="task-progress-info">
-                    <p>Completed: <span id="tasks-completed">0</span> / 40</p>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="task-progress-bar" style="width: 0%;"></div>
-                </div>
-                <p class="reward-info">Get <span class="reward-amount">250 PEPE</span> for each ad view. Tasks reset every 24 hours.</p>
-                <button class="start-task-btn" id="start-task-button" onclick="completeAdTask()">
-                    <i class="fas fa-play-circle"></i> Watch Ad
-                </button>
-            </div>
+        <div class="stat-item">
+            <p><i class="fas fa-tv icon-left"></i> Total Ads Viewed</p>
+            <p class="stat-value" id="total-ads-viewed">0</p>
         </div>
-        
-        <div id="withdraw" class="tab-content">
-            <h2 class="page-title">Withdraw Funds</h2>
-            <div class="available-balance-banner">
-                Available Balance: <span class="bold-text"><span id="withdraw-balance">0</span> PEPE</span>
-            </div>
-            <div class="withdraw-form-card">
-                <h3 class="card-title">Request Withdrawal</h3>
-                <div class="input-group">
-                    <label for="withdraw-method">Method</label>
-                    <select id="withdraw-method">
-                        <option value="binancepay">Binance Pay (Min: 10,000 PEPE)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="withdraw-amount">Amount</label>
-                    <input type="number" id="withdraw-amount" placeholder="e.g., 15000">
-                </div>
-                <div class="input-group">
-                    <label for="wallet-id">Binance ID or Email</label>
-                    <input type="text" id="wallet-id" placeholder="Enter your Binance Pay ID or Email">
-                </div>
-                <button class="submit-withdrawal-btn" onclick="submitWithdrawal()">
-                    <i class="fas fa-paper-plane"></i> Submit Request
-                </button>
-            </div>
-
-            <div class="transaction-history">
-                <h3 class="section-title">Recent Withdrawals</h3>
-                <div id="history-list">
-                    <p class="no-history">You have no withdrawal history yet.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="profile" class="tab-content">
-            <div class="profile-header">
-                <img src="https://i.pravatar.cc/150" alt="User Profile" class="profile-pic-large">
-                <h3 id="profile-name">User</h3>
-                <p id="telegram-username" class="text-muted">@username</p>
-                <p class="profile-balance">Balance: <span id="profile-balance">0</span> PEPE</p>
-            </div>
-            <div class="profile-stats">
-                <h3 class="section-title">Statistics</h3>
-                <div class="stat-item">
-                    <p><i class="fas fa-chart-line icon-left"></i> Earned So Far</p>
-                    <p class="stat-value"><span id="earned-so-far">0</span> PEPE</p>
-                </div>
-                <div class="stat-item">
-                    <p><i class="fas fa-tv icon-left"></i> Total Ads Viewed</p>
-                    <p class="stat-value" id="total-ads-viewed">0</p>
-                </div>
-                <div class="stat-item">
-                    <p><i class="fas fa-users icon-left"></i> Total Referrals</p>
-                    <p class="stat-value" id="total-refers">0</p>
-                </div>
-            </div>
-        </div>
-        
-        <button class="refer-fab" onclick="openReferModal()"><i class="fas fa-gift"></i></button>
-        <div id="refer-modal" class="modal-overlay">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeReferModal()">&times;</button>
-                <h2 class="modal-title">Refer Friends, Earn 10% More!</h2>
-                <p class="modal-subtitle">Earn a <span class="highlight">10% commission</span> from your friends' earnings!</p>
-                <div class="referral-link-container">
-                    <input type="text" id="referral-link" readonly>
-                    <button onclick="copyReferralLink(this)"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="referral-stats">
-                    <p><strong><span id="refer-count">0</span></strong> Referrals</p>
-                    <p><strong><span id="refer-earnings">0</span> PEPE</strong> Earned</p>
-                </div>
-                <div class="referral-requirements">
-                    <h4>How a referral is counted:</h4>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Your friend must join using your unique link.</li>
-                        <li><i class="fas fa-check-circle"></i> Your referral count increases instantly when they join.</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="stat-item">
+            <p><i class="fas fa-users icon-left"></i> Total Referrals</p>
+            <p class="stat-value" id="total-refers">0</p>
         </div>
     </div>
-    
-    <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showTab('home', this)"><i class="fas fa-home"></i><span>Home</span></a>
-        <a href="#" class="nav-item" onclick="showTab('earn', this)"><i class="fas fa-coins"></i><span>Earn</span></a>
-        <a href="#" class="nav-item" onclick="showTab('withdraw', this)"><i class="fas fa-wallet"></i><span>Withdraw</span></a>
-        <a href="#" class="nav-item" onclick="showTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></a>
-    </nav>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js" defer></script>
-    <script src="script.js" defer></script>
-</body>
+</div>
 
-</html>
+<button class="refer-fab" onclick="openReferModal()"><i class="fas fa-gift"></i></button>
+
+<div id="refer-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeReferModal()">&times;</button>
+        <h2 class="modal-title">Refer Friends, Earn 10% More!</h2>
+        <p class="modal-subtitle">Earn a <span class="highlight">10% commission</span> from your friends' earnings!</p>
+        <div class="referral-link-container">
+            <input type="text" id="referral-link" readonly>
+            <button onclick="copyReferralLink(this)"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="referral-stats">
+            <p><strong><span id="refer-count">0</span></strong> Referrals</p>
+            <p><strong><span id="refer-earnings">0</span> PEPE</strong> Earned</p>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <a href="#" class="nav-item active" onclick="showTab('home', this)"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="nav-item" onclick="showTab('earn', this)"><i class="fas fa-coins"></i><span>Earn</span></a>
+    <a href="#" class="nav-item" onclick="showTab('withdraw', this)"><i class="fas fa-wallet"></i><span>Withdraw</span></a>
+    <a href="#" class="nav-item" onclick="showTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></a>
+</nav>
+
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDS-X4ZRHlLIBOZJsYKc9oGnNrL6k0J50U",
+    authDomain: "taskup-47d9c.firebaseapp.com",
+    projectId: "taskup-47d9c",
+    storageBucket: "taskup-47d9c.firebasestorage.app",
+    messagingSenderId: "889706397464",
+    appId: "1:889706397464:web:12e95e738f3f42ba08a86d",
+    measurementId: "G-FDKNRDJXQS"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Get Telegram User ID (simulate if not in Telegram)
+  const tg = window.Telegram?.WebApp;
+  const telegramUserId = tg?.initDataUnsafe?.user?.id?.toString() || "test_user_" + Math.floor(Math.random() * 100000);
+
+  // Parse referrer from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const referrerId = urlParams.get("ref");
+
+  // Create user if not exists
+  db.collection("users").doc(telegramUserId).get().then(doc => {
+    if (!doc.exists) {
+      db.collection("users").doc(telegramUserId).set({
+        name: tg?.initDataUnsafe?.user?.first_name || "New User",
+        telegramUsername: tg?.initDataUnsafe?.user?.username ? @${tg.initDataUnsafe.user.username} : "@newuser",
+        balance: 0,
+        earnedSoFar: 0,
+        totalAdsViewed: 0,
+        totalReferrals: 0
+      }).
 
