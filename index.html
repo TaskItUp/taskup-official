@@ -15,48 +15,91 @@
 
 
 <body>
-  <h1>Firebase Web App</h1>
+
   <button id="addTaskBtn">Add Task</button>
 
   <script type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // TODO: Replace with your own Firebase config from the console
+    // Firebase config
     const firebaseConfig = {
-    apiKey: "AIzaSyDS-X4ZRHlLIBOZJsYKc9oGnNrL6k0J50U",
-  authDomain: "taskup-47d9c.firebaseapp.com",
-  projectId: "taskup-47d9c",
-  storageBucket: "taskup-47d9c.firebasestorage.app",
-  messagingSenderId: "889706397464",
-  appId: "1:889706397464:web:12e95e738f3f42ba08a86d",
-  measurementId: "G-FDKNRDJXQS"
+        apiKey: "AIzaSyDS-X4ZRHlLIBOZJsYKc9oGnNrL6k0J50U",
+        authDomain: "taskup-47d9c.firebaseapp.com",
+        projectId: "taskup-47d9c",
+        storageBucket: "taskup-47d9c.firebasestorage.app",
+        messagingSenderId: "889706397464",
+        appId: "1:889706397464:web:12e95e738f3f42ba08a86d",
+        measurementId: "G-FDKNRDJXQS"
     };
 
-    // Initialize Firebase
+    // Init Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Function to add data to Firestore
-    async function addTask() {
-      try {
-        await addDoc(collection(db, "tasks"), {
-          name: "Test Task",
-          status: "pending",
-          createdAt: new Date()
+    // Copy referral link function
+    window.copyReferralLink = (button) => {
+        const input = document.getElementById("referral-link");
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => button.innerHTML = '<i class="fas fa-copy"></i>', 2000);
         });
-        alert("Task added!");
-      } catch (error) {
-        console.error("Error adding task: ", error);
-      }
+    };
+
+    // Listen for profile changes
+    function listenUserProfile(userId) {
+        const userRef = doc(db, "users", userId.toString());
+        onSnapshot(userRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById("profile-name").textContent = data.name || "User";
+                document.getElementById("telegram-username").textContent = data.username ? @${data.username} : "@username";
+                document.getElementById("profile-balance").textContent = data.balance || 0;
+                document.getElementById("earned-so-far").textContent = data.earned || 0;
+                document.getElementById("total-ads-viewed").textContent = data.adsViewed || 0;
+                document.getElementById("total-refers").textContent = data.referrals || 0;
+                document.getElementById("refer-count").textContent = data.referrals || 0;
+                document.getElementById("refer-earnings").textContent = data.referralEarnings || 0;
+                document.getElementById("referral-link").value = https://t.me/YOUR_BOT?start=${userId};
+            }
+        });
     }
 
-    // Event listener for the button
-    document.getElementById("addTaskBtn").addEventListener("click", addTask);
-  </script>
+    // Create user in Firestore if not exists
+    async function ensureUserExists(user) {
+        const userRef = doc(db, "users", user.id.toString());
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) {
+            await setDoc(userRef, {
+                name: user.first_name || "User",
+                username: user.username || "",
+                balance: 0,
+                earned: 0,
+                adsViewed: 0,
+                referrals: 0,
+                referralEarnings: 0,
+                createdAt: new Date().toISOString()
+            });
+            console.log("New user created in Firestore");
+        } else {
+            console.log("User already exists");
+        }
+    }
+
+    // Telegram WebApp ready
+    Telegram.WebApp.ready();
+    const tgUser = Telegram.WebApp.initDataUnsafe.user;
+
+    if (tgUser) {
+        await ensureUserExists(tgUser);
+        listenUserProfile(tgUser.id);
+    } else {
+        console.log("No Telegram user found");
+    }
+</script>
     <div id="app-container">
         <div id="home" class="tab-content active">
             <div class="header">
@@ -212,3 +255,4 @@
 </body>
 
 </html>
+
